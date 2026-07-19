@@ -41,6 +41,12 @@ qgis_process run "topology_split:topologysplit" \
 1. Run `scripts/package.ps1` to build `topology_split-<version>.zip`.
 2. In QGIS: **Plugins → Manage and Install Plugins → Install from ZIP**.
 
+### Without installing — from the QGIS Python Console
+Paste [console/topology_split_console.py](console/topology_split_console.py) into the
+QGIS **Python Console** (`Ctrl+Alt+P`). Select your line layer first (or set
+`INPUT_LAYER`/`TOLERANCE` in the CONFIG block at the top), and it adds a noded
+memory layer to the project — no plugin install required.
+
 ### For development (symlink/copy into your profile)
 ```powershell
 ./scripts/deploy.ps1        # copies the plugin into your QGIS 4 profile

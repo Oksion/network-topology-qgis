@@ -1,39 +1,64 @@
 # Topology Split
 
-A **QGIS 4.0** plugin providing a Processing algorithm that **rebuilds the topology of
-a single line layer against itself** — noding it at all intersections and touches,
-optionally extending dangling ends, preserving geometry and attributes.
+A **QGIS 4.0** plugin providing a **line-topology toolkit** — three Processing tools to
+clean and build the topology of a line layer, preserving geometry and attributes.
 
 > ⚠️ Requires **QGIS 4.0 or newer** (Qt6 / PyQt6). It will not load on QGIS 3.x.
 
-## What it does
+Find them in the **Processing Toolbox** under **Topology Split → Topology**.
 
-Given **one line layer**, the algorithm:
+## Tools
 
-1. Splits both lines at every **crossing** (X) and where one line's **end touches**
-   another line (T).
-2. Optionally **extends a dangling end** along its own direction, up to a configurable
-   **tolerance**, until it meets another line — then splits there too.
-3. Outputs **single-part** `LineString`s running node-to-node; the shape between nodes
-   and all **attributes** are preserved.
-
-Find it in the **Processing Toolbox** under **Topology Split → Topology → Topology split**,
-or run it headless:
+### 1. Topology split — `topology_split:topologysplit`
+Nodes a single line layer against itself: splits both lines at every **crossing** (X)
+and where one line's **end touches** another line (T); optionally **extends a dangling
+end** along its own direction, up to a **tolerance**, until it reaches another line.
+Output = single-part LineStrings running node-to-node.
 
 ```bash
 qgis_process run "topology_split:topologysplit" \
-  --INPUT=roads.gpkg \
-  --TOLERANCE=0.5 \
-  --OUTPUT=roads_noded.gpkg
+  --INPUT=roads.gpkg --TOLERANCE=0.5 --OUTPUT=roads_noded.gpkg
 ```
 
-### Parameters
+| Param | Meaning |
+|-------|---------|
+| `INPUT` | Line layer to node against itself |
+| `TOLERANCE` | Max gap (map units) to extend a dangling end. `0` = no extension |
+| `OUTPUT` | Noded single-part line layer |
 
-| Name | Meaning |
-|------|---------|
-| `INPUT` | Line layer to be noded against itself |
-| `TOLERANCE` | Max distance (map units) to extend a dangling end to reach another line. `0` disables extension |
-| `OUTPUT` | Resulting single-part line layer |
+### 2. Resolve dangles — `topology_split:resolvedangles`
+Cleans dangling ends without splitting: **extends undershoots** along their direction and
+**trims overshoots** back to the nearest crossing, within one tolerance. One output
+feature per input feature.
+
+```bash
+qgis_process run "topology_split:resolvedangles" \
+  --INPUT=roads.gpkg --TOLERANCE=1.0 \
+  --FIX_UNDERSHOOTS=true --FIX_OVERSHOOTS=true --OUTPUT=roads_clean.gpkg
+```
+
+| Param | Meaning |
+|-------|---------|
+| `TOLERANCE` | Max gap to close / tail to trim (map units) |
+| `FIX_UNDERSHOOTS` | Extend ends that stop short of a line |
+| `FIX_OVERSHOOTS` | Trim ends that run past a crossing |
+
+### 3. Collapse pseudo-nodes — `topology_split:collapsepseudonodes`
+Merges chains of lines meeting only at **degree-2 nodes** into single lines
+(junctions and dead-ends kept). Optional **group field** stops a merge across an
+attribute boundary.
+
+```bash
+qgis_process run "topology_split:collapsepseudonodes" \
+  --INPUT=roads_noded.gpkg --GROUP_FIELD=road_class --OUTPUT=roads_merged.gpkg
+```
+
+| Param | Meaning |
+|-------|---------|
+| `GROUP_FIELD` | (optional) only merge where this field is equal |
+| `OUTPUT` | Merged single-part line layer |
+
+> Typical cleaning flow: **Resolve dangles** → **Topology split** → **Collapse pseudo-nodes**.
 
 ## Installation
 

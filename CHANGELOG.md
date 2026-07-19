@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+### Added
+- **Resolve dangles** algorithm (`topology_split:resolvedangles`): directionally
+  extend undershooting dangles and trim overshooting ones, under one tolerance with
+  independent toggles; one output feature per input feature.
+- **Collapse pseudo-nodes** algorithm (`topology_split:collapsepseudonodes`): merge
+  chains of lines through degree-2 nodes into single lines, with an optional
+  attribute-group barrier; attributes inherited from the longest segment.
+- Shared helpers extracted into `topology_utils.py`.
+- pytest suites for both new algorithms (green on QGIS 4.2).
 
 ## [0.1.0] - 2026-07-19
 ### Added

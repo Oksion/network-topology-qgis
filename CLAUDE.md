@@ -53,8 +53,12 @@ Topology_split/
 ├── __init__.py                     # classFactory(iface) — QGIS entry point
 ├── metadata.txt                    # plugin manifest (QGIS reads this)
 ├── topology_split_plugin.py        # registers/unregisters the Processing provider
-├── topology_split_provider.py      # QgsProcessingProvider (groups algorithms)
-├── topology_split_algorithm.py     # QgsProcessingAlgorithm — the split logic
+├── topology_split_provider.py      # QgsProcessingProvider (registers all 3 algorithms)
+├── topology_utils.py               # shared pure helpers (dist, extract_points, …)
+├── topology_split_algorithm.py     # QgsProcessingAlgorithm — self-noding
+├── dangle_resolver_algorithm.py    # QgsProcessingAlgorithm — extend/trim dangles
+├── pseudonode_collapse_algorithm.py# QgsProcessingAlgorithm — merge degree-2 chains
+├── console/topology_split_console.py # copy-paste script for the QGIS Python Console
 ├── resources/icon.svg              # provider + plugin icon
 ├── tests/                          # pytest tests (need a QGIS Python env)
 ├── scripts/                        # deploy.ps1 / package.ps1 (Windows)
@@ -62,7 +66,24 @@ Topology_split/
 └── .claude/skills/qgis4-plugin-dev # reusable skill: QGIS 4 / Qt6 plugin know-how
 ```
 
-## The algorithm's core (`topology_split_algorithm.py`)
+## The toolkit
+
+Three algorithms share the pure helpers in `topology_utils.py` (import them with the
+`try: from .topology_utils import … / except ImportError: from topology_utils import …`
+dual pattern, so modules work both as a package inside QGIS and standalone in tests):
+
+- **`topology_split_algorithm.py`** — self-node a line layer (see pipeline below).
+- **`dangle_resolver_algorithm.py`** — `Resolve dangles`: directionally extend
+  undershoots (`extend_end`) and trim overshoots (`sub_polyline` back to the nearest
+  crossing). One tolerance + two booleans; one output feature per input feature.
+- **`pseudonode_collapse_algorithm.py`** — `Collapse pseudo-nodes`: build a node→edge
+  incidence map keyed on snapped endpoints, walk degree-2 chains into single lines;
+  optional group field acts as a merge barrier; attributes from the longest segment.
+
+New algorithms go in their own module and are registered in
+`topology_split_provider.py::loadAlgorithms`.
+
+## The split algorithm's core (`topology_split_algorithm.py`)
 
 Pipeline (order matters — extend before noding):
 

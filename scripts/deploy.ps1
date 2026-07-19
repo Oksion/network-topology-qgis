@@ -32,9 +32,9 @@ $PluginName = "topology_split"
 $SourceDir  = Split-Path -Parent $PSScriptRoot   # repo root (parent of scripts/)
 
 if (-not $PluginsRoot) {
-    # NOTE: QGIS 4.0 kept the "QGIS3" profiles folder name from the 3.x series.
+    # QGIS 4.x uses the "QGIS4" profiles folder (QGIS 3.x used "QGIS3").
     # If your install uses a different location, pass -PluginsRoot explicitly.
-    $PluginsRoot = Join-Path $env:APPDATA "QGIS\QGIS3\profiles\$Profile\python\plugins"
+    $PluginsRoot = Join-Path $env:APPDATA "QGIS\QGIS4\profiles\$Profile\python\plugins"
 }
 
 $Target = Join-Path $PluginsRoot $PluginName

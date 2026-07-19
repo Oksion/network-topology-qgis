@@ -1,33 +1,39 @@
 # Topology Split
 
-A **QGIS 4.0** plugin providing a Processing algorithm that **topologically splits**
-vector features by a layer of splitting lines, preserving attributes.
+A **QGIS 4.0** plugin providing a Processing algorithm that **rebuilds the topology of
+a single line layer against itself** — noding it at all intersections and touches,
+optionally extending dangling ends, preserving geometry and attributes.
 
 > ⚠️ Requires **QGIS 4.0 or newer** (Qt6 / PyQt6). It will not load on QGIS 3.x.
 
 ## What it does
 
-Given an **input** polygon or line layer and a **split lines** layer, the algorithm
-cuts each input feature wherever a splitting line crosses it and outputs the resulting
-parts as separate features — each keeping the original feature's attributes.
+Given **one line layer**, the algorithm:
+
+1. Splits both lines at every **crossing** (X) and where one line's **end touches**
+   another line (T).
+2. Optionally **extends a dangling end** along its own direction, up to a configurable
+   **tolerance**, until it meets another line — then splits there too.
+3. Outputs **single-part** `LineString`s running node-to-node; the shape between nodes
+   and all **attributes** are preserved.
 
 Find it in the **Processing Toolbox** under **Topology Split → Topology → Topology split**,
 or run it headless:
 
 ```bash
 qgis_process run "topology_split:topologysplit" \
-  --INPUT=parcels.gpkg \
-  --SPLIT_LAYER=cut_lines.gpkg \
-  --OUTPUT=parcels_split.gpkg
+  --INPUT=roads.gpkg \
+  --TOLERANCE=0.5 \
+  --OUTPUT=roads_noded.gpkg
 ```
 
 ### Parameters
 
 | Name | Meaning |
 |------|---------|
-| `INPUT` | Polygon or line layer to be split |
-| `SPLIT_LAYER` | Line layer whose geometries do the cutting |
-| `OUTPUT` | Resulting layer (geometry type matches the input) |
+| `INPUT` | Line layer to be noded against itself |
+| `TOLERANCE` | Max distance (map units) to extend a dangling end to reach another line. `0` disables extension |
+| `OUTPUT` | Resulting single-part line layer |
 
 ## Installation
 
@@ -46,8 +52,9 @@ See [docs/development.md](docs/development.md) for the full dev setup.
 
 ## Status
 
-`0.1.0` — experimental. The split logic is functional but not yet validated across
-all geometry edge cases (self-intersections, multipart inputs, curved geometries).
+`0.1.0` — experimental. Geometry is treated as planar 2D (Z/M dropped). Long collinear
+overlaps are noded only at their extremities; the dangle-extension pass is single-pass.
+Validate on your own data before relying on it in production.
 
 ## License
 

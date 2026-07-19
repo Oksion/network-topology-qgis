@@ -38,14 +38,20 @@ The tests need a PyQGIS-capable interpreter. A plain `pip install pytest` does *
 provide the `qgis` module — use QGIS's Python or an OSGeo4W/conda `qgis` env.
 
 ```powershell
-# OSGeo4W shell (has qgis on the path):
-python -m pytest
+# Easiest: use the QGIS python launcher, which sets up the PyQGIS environment for you.
+# (This machine has QGIS 4.2.0; adjust the version in the path to your install.)
+& "C:/Program Files/QGIS 4.2.0/bin/python-qgis.bat" -m pytest
 
-# or point at QGIS's python explicitly (adjust the path/version):
-& "C:/Program Files/QGIS 4.0/apps/Python312/python.exe" -m pytest
+# If pytest isn't installed in QGIS's python, install it there first:
+& "C:/Program Files/QGIS 4.2.0/bin/python-qgis.bat" -m pip install pytest
 ```
 
-Without PyQGIS, the tests **skip** (they don't fail) thanks to `pytest.importorskip`.
+Do **not** run a bare `python -m pytest` — the system Python cannot `import qgis`.
+Without PyQGIS the tests **skip** (they don't fail) thanks to `pytest.importorskip`.
+
+The functional suite (`tests/test_topology_split_algorithm.py`) covers X-crossings,
+T-touches, attribute inheritance, dangle extension, and multipart explode. It has been
+run green against QGIS 4.2.0 (Qt6).
 
 ## Linting
 

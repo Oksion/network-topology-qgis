@@ -1,9 +1,12 @@
 [general]
 name=Topology Split
 qgisMinimumVersion=4.0
-description=Topologically split vector features by a layer of splitting lines.
-about=Adds a Processing algorithm that splits input polygon or line features using
-    a layer of splitter lines, preserving attributes. Built for QGIS 4.0 (Qt6 / PyQt6).
+description=Self-node a line layer: extend dangles, split at all crossings and touches.
+about=Adds a Processing algorithm that rebuilds the topology of a single line layer.
+    It splits both lines at every crossing (X) and where a line's end touches another
+    line (T), can extend dangling ends along their direction up to a tolerance until
+    they meet another line, and outputs single-part LineStrings that preserve the
+    original shape and attributes. Built for QGIS 4.0 (Qt6 / PyQt6).
 version=0.1.0
 author=oksion
 email=oksion@gmail.com
@@ -14,7 +17,7 @@ tracker=https://example.com/topology-split/issues
 repository=https://example.com/topology-split
 
 ; Comma separated, no spaces after commas
-tags=topology,split,vector,processing,geometry,line,polygon
+tags=topology,split,noding,network,line,vector,processing,geometry,snap
 
 category=Vector
 icon=resources/icon.svg

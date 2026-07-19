@@ -8,8 +8,18 @@ A **QGIS 4.0** plugin that ships a **Processing algorithm** (`Topology split`). 
 no classic menu/toolbar GUI — everything runs through the Processing framework
 (Toolbox, model builder, `qgis_process` CLI, batch mode).
 
-The algorithm splits every feature of an input polygon/line layer by the geometries
-of a "splitter lines" layer, preserving attributes on each resulting part.
+The algorithm rebuilds the topology of a **single line layer against itself**:
+
+1. Input is a line (polyline) layer.
+2. Split where the **end of a line touches another line** (T-junctions).
+3. **Preserve the original geometry** — no vertex is moved or dropped; the shape
+   between nodes is kept.
+4. Optionally **extend a dangling end** along its own direction, up to a configurable
+   tolerance, until it reaches another line.
+5. Split **both** lines at every **crossing** (X-intersections).
+6. Output is **single-part** `LineString`s (never `MultiLineString`), one per span
+   between two nodes.
+7. **Attributes are inherited** by every resulting part.
 
 ## Target platform (hard constraints)
 
@@ -54,15 +64,29 @@ Topology_split/
 
 ## The algorithm's core (`topology_split_algorithm.py`)
 
-- Builds a `QgsSpatialIndex` over the splitter lines so each input feature is only
-  tested against nearby lines.
-- Splits with `QgsGeometry.splitGeometry(points, topological=False, splitFeature=True)`,
-  which **mutates the geometry in place** to the first part and returns the extra parts.
-  We accumulate parts across every polyline of every relevant splitter.
-- Copies source `fields()`/`attributes()` onto each output part.
+Pipeline (order matters — extend before noding):
 
-If you extend it, keep the "collect splitters → index → per-feature split → write parts"
-shape, and honour `feedback.isCanceled()` / `feedback.setProgress(...)`.
+1. **Explode** every input feature to single-part polylines (lists of `QgsPointXY`),
+   keeping a copy of the parent attributes on each.
+2. **Extend dangles** (`_extend_end`): for each true dangle endpoint (one that does
+   not already lie on another line), take the bearing of its last segment, cast a ray
+   of length `tolerance`, and if it meets another line, append that meeting point.
+   Then rebuild the geometries + `QgsSpatialIndex`.
+3. **Collect nodes**: for each pair of lines whose bboxes overlap, `geom_i.intersection(geom_j)`;
+   `_extract_points` flattens the result (Point/MultiPoint, and Line endpoints for
+   collinear overlaps). Each node point is added to **both** lines' cut lists.
+4. **Cut** (`_split_polyline`): map each node point to a distance-along-line via
+   `lineLocatePoint`, then split the vertex list at those distances — inserting a
+   vertex mid-segment or reusing an existing one. Original vertices are preserved.
+5. **Write** one single-part `LineString` per span, copying the parent attributes.
+
+Conventions to keep if you extend it:
+
+- Geometry is planar **2D** (Z/M dropped) and the sink wkbType is `Qgis.WkbType.LineString`.
+- `eps` is scaled to the data extent (`diag * 1e-9`); reuse it, don't hard-code a literal.
+- Honour `feedback.isCanceled()` / `feedback.setProgress(...)` in every pass.
+- The helpers `_dist`, `_extract_points`, `_split_polyline` are pure and module-level —
+  unit-testable without a full QGIS app where possible.
 
 ## Build / run / test
 

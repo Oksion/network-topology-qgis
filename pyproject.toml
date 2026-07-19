@@ -1,0 +1,15 @@
+# Tooling config only. This project is a QGIS plugin loaded from source by QGIS,
+# not a pip-installable package, so there is no [build-system] / packaging table.
+
+[tool.ruff]
+line-length = 90
+target-version = "py39"   # QGIS 4.0 ships CPython 3.9+; keep syntax compatible.
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B"]
+# QGIS/Qt APIs mandate mixedCase method names (initGui, loadAlgorithms, ...).
+ignore = ["N802", "N803", "N815"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

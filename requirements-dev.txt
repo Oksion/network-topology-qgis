@@ -1,0 +1,10 @@
+# Development-only tooling. Install into a Python env that ALSO has the `qgis`
+# module available (QGIS's bundled Python, or an OSGeo4W / conda `qgis` env).
+#
+#   pip install -r requirements-dev.txt
+#
+# NOTE: `qgis` / PyQGIS itself is NOT pip-installable and is intentionally absent
+# here — it comes from your QGIS installation.
+
+pytest>=8.0
+ruff>=0.6

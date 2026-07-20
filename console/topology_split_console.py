@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
-#  Topology Split — standalone script for the QGIS Python Console
+#  Network Topology · Topology split — standalone script for the QGIS Python Console
 # =============================================================================
 #  Self-nodes a SINGLE line layer against itself (no plugin install required):
 #    * splits both lines at every crossing (X) and endpoint-touch (T);

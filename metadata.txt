@@ -1,12 +1,13 @@
 [general]
-name=Topology Split
+name=Network Topology
 qgisMinimumVersion=4.0
-description=Line topology toolkit: node a layer, resolve dangles, collapse pseudo-nodes.
+description=Toolkit to clean and build the topology of line networks (roads, rivers, pipelines, railways).
 about=Adds a Processing provider with tools to clean and build the topology of a line
-    layer: (1) Topology split — node the layer at every crossing (X) and endpoint-touch
-    (T), extending dangles along their direction up to a tolerance; (2) Resolve dangles —
-    directionally extend undershoots and trim overshoots; (3) Collapse pseudo-nodes —
-    merge chains of lines through degree-2 nodes into single lines. Output is single-part,
+    network — roads, rivers, pipelines, railways: (1) Topology split — node the layer at
+    every crossing (X) and endpoint-touch (T), extending dangles along their direction up
+    to a tolerance; (2) Resolve dangles — directionally extend undershoots and trim
+    overshoots; (3) Collapse pseudo-nodes — merge chains of lines through degree-2 nodes;
+    (4) Connected components — label independent sub-networks. Output is single-part,
     geometry and attributes preserved. Built for QGIS 4.0 (Qt6 / PyQt6).
 version=0.1.0
 author=oksion
@@ -18,7 +19,7 @@ tracker=https://example.com/topology-split/issues
 repository=https://example.com/topology-split
 
 ; Comma separated, no spaces after commas
-tags=topology,split,noding,network,line,vector,processing,geometry,snap,dangle,overshoot,undershoot,pseudonode,dissolve,clean
+tags=topology,network,noding,split,line,roads,rivers,pipeline,railway,connectivity,components,cluster,dangle,overshoot,undershoot,pseudonode,dissolve,clean,vector,processing,geometry,snap
 
 category=Vector
 icon=resources/icon.svg

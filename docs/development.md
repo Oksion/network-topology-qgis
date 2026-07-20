@@ -17,16 +17,16 @@ See [../CLAUDE.md](../CLAUDE.md#project-layout) for the annotated tree.
    ```powershell
    ./scripts/deploy.ps1
    ```
-2. Launch QGIS → **Plugins → Manage and Install Plugins** → enable **Topology Split**.
+2. Launch QGIS → **Plugins → Manage and Install Plugins** → enable **Network Topology**.
 3. Install the **Plugin Reloader** plugin (once). After editing code, hit its reload
    button to reload without restarting QGIS.
 4. The algorithm appears in the **Processing Toolbox** under
-   **Topology Split → Topology → Topology split**.
+   **Network Topology → Topology → Topology split**.
 
 ## Running the algorithm headless
 
 ```bash
-qgis_process run "topology_split:topologysplit" \
+qgis_process run "network_topology:topologysplit" \
   --INPUT=parcels.gpkg \
   --SPLIT_LAYER=cut_lines.gpkg \
   --OUTPUT=out.gpkg

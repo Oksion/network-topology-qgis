@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Topology Split — QGIS 4.0 Processing plugin.
+"""Network Topology — QGIS 4.0 Processing plugin.
 
 QGIS loads a plugin by importing this package and calling ``classFactory(iface)``.
 Keep imports lazy (inside the function) so that importing the package never fails

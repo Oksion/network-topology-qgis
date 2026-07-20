@@ -7,7 +7,7 @@
     Copies the plugin source (excluding dev-only files) into
     <profile>\python\plugins\topology_split.
 
-    After deploying: enable "Topology Split" in the Plugin Manager, and install the
+    After deploying: enable "Network Topology" in the Plugin Manager, and install the
     "Plugin Reloader" plugin to reload code changes without restarting QGIS.
 
 .PARAMETER Profile
@@ -28,7 +28,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$PluginName = "topology_split"
+$PluginName = "network_topology"
 $SourceDir  = Split-Path -Parent $PSScriptRoot   # repo root (parent of scripts/)
 
 if (-not $PluginsRoot) {

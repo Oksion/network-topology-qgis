@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Shared geometry helpers for the Topology Split toolkit.
+"""Shared geometry helpers for the Network Topology toolkit.
 
 Pure, module-level functions operating mostly on lists of ``QgsPointXY`` so they
 stay unit-testable. Imported by every algorithm in the provider.

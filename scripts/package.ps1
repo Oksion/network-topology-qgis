@@ -15,7 +15,7 @@ param()
 
 $ErrorActionPreference = "Stop"
 
-$PluginName = "topology_split"
+$PluginName = "network_topology"
 $RepoRoot   = Split-Path -Parent $PSScriptRoot
 $DistDir    = Join-Path $RepoRoot "dist"
 $StageDir   = Join-Path $DistDir $PluginName

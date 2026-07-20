@@ -1,4 +1,4 @@
-# CLAUDE.md — Topology Split (QGIS 4.0 plugin)
+# CLAUDE.md — Network Topology (QGIS 4.0 plugin)
 
 Guidance for Claude Code when working in this repository.
 

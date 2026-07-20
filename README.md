@@ -12,6 +12,35 @@ A **QGIS 4.0** plugin — a toolkit to **clean and build the topology of line ne
 
 > ⚠️ Requires **QGIS 4.0 or newer** (Qt6 / PyQt6). It will not load on QGIS 3.x.
 
+## Why you'd want this
+
+Line data from open (and not-so-open) sources — **OpenStreetMap**, digitized CAD/DWG,
+scanned maps, GPS tracks — is drawn to *look* right, not to *be* topologically correct.
+Two roads cross with no shared node, a stream stops a few centimetres short of the river
+it feeds, an edge overshoots past a junction, the same road arrives as one long line here
+and a dozen fragments there. On screen it's fine; as a **graph, it's broken**.
+
+And almost everything useful you do with a line network needs that graph:
+
+- **Routing / network analysis** — roads, transport, rail (pgRouting, GRASS `v.net`, QGIS network tools);
+- **Hydrology** — connected river networks, flow tracing, catchments;
+- **Utilities** — water, gas, power, sewer: connectivity and upstream/downstream tracing;
+- **Any tree- or network-forming system** you need to build from raw lines.
+
+If the source data isn't already noded and connected, those tools quietly give wrong
+answers — a route that won't cross a junction, a "disconnected" island that's really a
+30 cm gap.
+
+**Network Topology** turns that raw geometry into a clean, connected graph: it extends
+undershoots, trims overshoots, nodes every crossing and touch, and collapses redundant
+pseudo-nodes — then lets you *inspect* the result (connected components, cluster extents,
+node degrees) to confirm the network really is one connected whole. It bundles the
+routine, fiddly steps — that otherwise mean chaining a dozen core/GRASS tools — into a
+single QGIS Processing provider, keeping geometry and attributes intact throughout.
+
+It's the **preprocessing & QA layer** you run *before* the domain-specific analysis: not a
+replacement for your router or hydrology model, but the thing that makes them trustworthy.
+
 Find the tools in the **Processing Toolbox** under **Network Topology → Topology**.
 
 ## Tools

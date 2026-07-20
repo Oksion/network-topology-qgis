@@ -52,12 +52,14 @@ The algorithm rebuilds the topology of a **single line layer against itself**:
 Topology_split/
 ├── __init__.py                     # classFactory(iface) — QGIS entry point
 ├── metadata.txt                    # plugin manifest (QGIS reads this)
-├── topology_split_plugin.py        # registers/unregisters the Processing provider
-├── topology_split_provider.py      # QgsProcessingProvider (registers all 3 algorithms)
+├── topology_split_plugin.py        # registers the provider; installs the i18n translator
+├── topology_split_provider.py      # QgsProcessingProvider (registers all 4 algorithms)
 ├── topology_utils.py               # shared pure helpers (dist, extract_points, …)
 ├── topology_split_algorithm.py     # QgsProcessingAlgorithm — self-noding
 ├── dangle_resolver_algorithm.py    # QgsProcessingAlgorithm — extend/trim dangles
 ├── pseudonode_collapse_algorithm.py# QgsProcessingAlgorithm — merge degree-2 chains
+├── connected_components_algorithm.py # QgsProcessingAlgorithm — cluster_id per sub-network
+├── i18n/network_topology_ru.ts/.qm # Russian translation (source + compiled)
 ├── console/topology_split_console.py # copy-paste script for the QGIS Python Console
 ├── resources/icon.svg              # provider + plugin icon
 ├── tests/                          # pytest tests (need a QGIS Python env)
@@ -122,7 +124,24 @@ There is no build step (pure Python). See `docs/development.md` for the full set
 Do not assume a bare `python` on PATH can `import qgis`. When asked to run tests,
 first check whether `qgis` is importable and say so if it is not.
 
+## Localization (i18n)
+
+- All user-facing strings go through `self.tr(...)`, whose context is the class name
+  (each algorithm has its own `tr` calling `QCoreApplication.translate("<Class>", s)`).
+- Russian translation lives in `i18n/network_topology_ru.ts` (source) compiled to
+  `network_topology_ru.qm`. `topology_split_plugin.py` installs a `QTranslator` for the
+  current QGIS locale (`locale/userLocale`) at plugin load, before algorithms display.
+- **When you add or change a user-facing string**, regenerate + recompile:
+  ```
+  pylupdate6 *_algorithm.py -ts i18n/network_topology_ru.ts   # via QGIS python env
+  lrelease i18n/network_topology_ru.ts -qm i18n/network_topology_ru.qm
+  ```
+  Then fill new `<translation>`s in the `.ts` and re-run `lrelease`. Ship the `.qm`
+  (deploy/package include `i18n/`). See `docs/development.md` for the exact commands.
+- Keep proper tool names consistent between the display name and any in-help references
+  (e.g. help text says «Топологическое разбиение», matching that algorithm's name).
+
 ## Style
 
 - `ruff` config lives in `pyproject.toml`. Match the existing docstring style.
-- User-facing strings wrapped in `self.tr(...)` for future translation.
+- User-facing strings wrapped in `self.tr(...)` for translation (see Localization).

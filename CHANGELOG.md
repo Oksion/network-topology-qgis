@@ -10,6 +10,10 @@ All notable changes to this project are documented here. The format is based on
   rivers, pipelines, railways). Algorithm ids are now `network_topology:*`.
 
 ### Added
+- **Russian localization** (`i18n/network_topology_ru.ts` / `.qm`): all algorithm
+  names, groups, parameter labels, help and messages. The plugin installs a
+  `QTranslator` for the current QGIS UI language at load. `tools/update_ts.py`
+  regenerates the source strings.
 - **Resolve dangles** algorithm (`network_topology:resolvedangles`): directionally
   extend undershooting dangles and trim overshooting ones, under one tolerance with
   independent toggles; one output feature per input feature.

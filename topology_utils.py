@@ -179,6 +179,46 @@ def split_polyline(vertices, cut_distances, eps):
     return [p for p in parts if len(p) >= 2 and polyline_length(p) > eps]
 
 
+def build_components(edge_pts, snap):
+    """Group edges into connected components via shared (snapped) endpoints.
+
+    ``edge_pts`` is a list of vertex-lists (one per edge). Returns a list of
+    components, each a list of edge indices, ordered by size descending (then by
+    smallest member index) — so component 0 is the largest sub-network.
+    """
+    n = len(edge_pts)
+    parent = list(range(n))
+
+    def find(x):
+        root = x
+        while parent[root] != root:
+            root = parent[root]
+        while parent[x] != root:
+            parent[x], x = root, parent[x]
+        return root
+
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    def key(pt):
+        return (round(pt.x() / snap), round(pt.y() / snap))
+
+    rep = {}
+    for ei, pts in enumerate(edge_pts):
+        for k in (key(pts[0]), key(pts[-1])):
+            if k in rep:
+                union(ei, rep[k])
+            else:
+                rep[k] = ei
+
+    comps = {}
+    for ei in range(n):
+        comps.setdefault(find(ei), []).append(ei)
+    return sorted(comps.values(), key=lambda m: (-len(m), min(m)))
+
+
 def sub_polyline(vertices, d0, d1, eps):
     """Return the sub-polyline of ``vertices`` between distances d0..d1 along it.
 

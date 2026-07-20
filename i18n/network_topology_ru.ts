@@ -2,42 +2,62 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru">
 <context>
-    <name>ConnectedComponentsAlgorithm</name>
+    <name>TopologySplitAlgorithm</name>
     <message>
-        <source>Connected components (clusters)</source>
-        <translation>Связные компоненты (кластеры)</translation>
+        <source>Topology split</source>
+        <translation>Топологическое разбиение</translation>
     </message>
     <message>
         <source>Topology</source>
         <translation>Топология</translation>
     </message>
     <message>
-        <source>Labels every line with the id of the independent sub-network (connected component) it belongs to. Lines connect where their &lt;b&gt;endpoints coincide&lt;/b&gt;.
+        <source>Rebuilds line topology on a single line layer.
 
-Adds &lt;b&gt;cluster_id&lt;/b&gt; (ordered by size, 1 = largest network) and &lt;b&gt;cluster_size&lt;/b&gt; (edge count). A fully-connected network is a single component; extra components reveal gaps or stray features.
+• Splits both lines at every crossing (X) and where one line's end touches another line (T).
+• Optionally extends a dangling line end, along its own direction, up to the &lt;b&gt;Snap/extend tolerance&lt;/b&gt;, until it meets another line — then splits there too.
+• Output features are single-part LineStrings running node-to-node; the shape between nodes and all attributes are preserved.
 
-Run &lt;i&gt;Topology split&lt;/i&gt; first if the data has mid-segment crossings.</source>
-        <translation>Присваивает каждой линии id независимой подсети (связной компоненты), к которой она относится. Линии считаются связанными там, где &lt;b&gt;совпадают их концы&lt;/b&gt;.
+&lt;b&gt;Snap/extend tolerance&lt;/b&gt; is in the layer's map units. Set it to 0 to disable extension and only node existing intersections.</source>
+        <translation>Перестраивает топологию одного слоя линий.
 
-Добавляет &lt;b&gt;cluster_id&lt;/b&gt; (по убыванию размера, 1 = крупнейшая сеть) и &lt;b&gt;cluster_size&lt;/b&gt; (число рёбер). Полностью связная сеть — одна компонента; лишние компоненты указывают на разрывы или отдельные объекты.
+• Разбивает обе линии в каждом пересечении (X) и там, где конец одной линии касается другой (T).
+• По желанию продлевает висячий конец линии вдоль его направления в пределах &lt;b&gt;Допуска привязки/достройки&lt;/b&gt;, пока он не встретит другую линию — и разбивает и там.
+• Выходные объекты — одночастные линии от узла до узла; форма между узлами и все атрибуты сохраняются.
 
-Если в данных есть пересечения в середине сегментов, сначала выполните &lt;i&gt;Топологическое разбиение&lt;/i&gt;.</translation>
+&lt;b&gt;Допуск привязки/достройки&lt;/b&gt; — в единицах карты слоя. Установите 0, чтобы отключить достройку и только нодировать существующие пересечения.</translation>
     </message>
     <message>
         <source>Input line layer</source>
         <translation>Входной слой линий</translation>
     </message>
     <message>
-        <source>Lines with cluster id</source>
-        <translation>Линии с id кластера</translation>
+        <source>Snap/extend tolerance (0 = no extension)</source>
+        <translation>Допуск привязки/достройки (0 = без достройки)</translation>
+    </message>
+    <message>
+        <source>Noded lines</source>
+        <translation>Нодированные линии</translation>
     </message>
     <message>
         <source>No usable line geometries in the input.</source>
         <translation>Во входных данных нет пригодных линейных геометрий.</translation>
     </message>
     <message>
-        <source>Done: {n} components from {edges} edges (largest = cluster 1).</source>
-        <translation>Готово: {n} компонент из {edges} рёбер (крупнейшая = кластер 1).</translation>
+        <source>Extending dangling ends…</source>
+        <translation>Достройка висячих концов…</translation>
+    </message>
+    <message>
+        <source>Computing intersections…</source>
+        <translation>Вычисление пересечений…</translation>
+    </message>
+    <message>
+        <source>Splitting lines at nodes…</source>
+        <translation>Разбиение линий в узлах…</translation>
+    </message>
+    <message>
+        <source>Done: {parts} parts from {inputs} lines, {ext} ends extended.</source>
+        <translation>Готово: {parts} частей из {inputs} линий, достроено концов — {ext}.</translation>
     </message>
 </context>
 <context>
@@ -143,62 +163,97 @@ Output is single-part LineStrings; a merged line inherits the attributes of its 
     </message>
 </context>
 <context>
-    <name>TopologySplitAlgorithm</name>
+    <name>ConnectedComponentsAlgorithm</name>
     <message>
-        <source>Topology split</source>
-        <translation>Топологическое разбиение</translation>
+        <source>Connected components (clusters)</source>
+        <translation>Связные компоненты (кластеры)</translation>
     </message>
     <message>
         <source>Topology</source>
         <translation>Топология</translation>
     </message>
     <message>
-        <source>Rebuilds line topology on a single line layer.
+        <source>Labels every line with the id of the independent sub-network (connected component) it belongs to. Lines connect where their &lt;b&gt;endpoints coincide&lt;/b&gt;.
 
-• Splits both lines at every crossing (X) and where one line's end touches another line (T).
-• Optionally extends a dangling line end, along its own direction, up to the &lt;b&gt;Snap/extend tolerance&lt;/b&gt;, until it meets another line — then splits there too.
-• Output features are single-part LineStrings running node-to-node; the shape between nodes and all attributes are preserved.
+Adds &lt;b&gt;cluster_id&lt;/b&gt; (ordered by size, 1 = largest network) and &lt;b&gt;cluster_size&lt;/b&gt; (edge count). A fully-connected network is a single component; extra components reveal gaps or stray features.
 
-&lt;b&gt;Snap/extend tolerance&lt;/b&gt; is in the layer's map units. Set it to 0 to disable extension and only node existing intersections.</source>
-        <translation>Перестраивает топологию одного слоя линий.
+Run &lt;i&gt;Topology split&lt;/i&gt; first if the data has mid-segment crossings.</source>
+        <translation>Присваивает каждой линии id независимой подсети (связной компоненты), к которой она относится. Линии считаются связанными там, где &lt;b&gt;совпадают их концы&lt;/b&gt;.
 
-• Разбивает обе линии в каждом пересечении (X) и там, где конец одной линии касается другой (T).
-• По желанию продлевает висячий конец линии вдоль его направления в пределах &lt;b&gt;Допуска привязки/достройки&lt;/b&gt;, пока он не встретит другую линию — и разбивает и там.
-• Выходные объекты — одночастные линии от узла до узла; форма между узлами и все атрибуты сохраняются.
+Добавляет &lt;b&gt;cluster_id&lt;/b&gt; (по убыванию размера, 1 = крупнейшая сеть) и &lt;b&gt;cluster_size&lt;/b&gt; (число рёбер). Полностью связная сеть — одна компонента; лишние компоненты указывают на разрывы или отдельные объекты.
 
-&lt;b&gt;Допуск привязки/достройки&lt;/b&gt; — в единицах карты слоя. Установите 0, чтобы отключить достройку и только нодировать существующие пересечения.</translation>
+Если в данных есть пересечения в середине сегментов, сначала выполните &lt;i&gt;Топологическое разбиение&lt;/i&gt;.</translation>
     </message>
     <message>
         <source>Input line layer</source>
         <translation>Входной слой линий</translation>
     </message>
     <message>
-        <source>Snap/extend tolerance (0 = no extension)</source>
-        <translation>Допуск привязки/достройки (0 = без достройки)</translation>
-    </message>
-    <message>
-        <source>Noded lines</source>
-        <translation>Нодированные линии</translation>
+        <source>Lines with cluster id</source>
+        <translation>Линии с id кластера</translation>
     </message>
     <message>
         <source>No usable line geometries in the input.</source>
         <translation>Во входных данных нет пригодных линейных геометрий.</translation>
     </message>
     <message>
-        <source>Extending dangling ends…</source>
-        <translation>Достройка висячих концов…</translation>
+        <source>Done: {n} components from {edges} edges (largest = cluster 1).</source>
+        <translation>Готово: {n} компонент из {edges} рёбер (крупнейшая = кластер 1).</translation>
+    </message>
+</context>
+<context>
+    <name>ClusterHullsAlgorithm</name>
+    <message>
+        <source>Cluster extents (hull / bbox)</source>
+        <translation>Оболочки кластеров (hull / bbox)</translation>
     </message>
     <message>
-        <source>Computing intersections…</source>
-        <translation>Вычисление пересечений…</translation>
+        <source>Topology</source>
+        <translation>Топология</translation>
     </message>
     <message>
-        <source>Splitting lines at nodes…</source>
-        <translation>Разбиение линий в узлах…</translation>
+        <source>Outputs one polygon per connected sub-network (cluster) of the line layer — a convex hull, bounding box, or oriented bounding box.
+
+Each polygon carries &lt;b&gt;cluster_id&lt;/b&gt; (ordered by size, 1 = largest), &lt;b&gt;edge_count&lt;/b&gt; and &lt;b&gt;length&lt;/b&gt;. Use it to spot disconnected clusters and decide which to bridge or drop.
+
+Lines join where their &lt;b&gt;endpoints coincide&lt;/b&gt;; run &lt;i&gt;Topology split&lt;/i&gt; first if the data has mid-segment crossings.</source>
+        <translation>Строит по одному полигону на каждую связную подсеть (кластер) слоя линий — выпуклую оболочку, ограничивающий прямоугольник или ориентированный прямоугольник.
+
+Каждый полигон несёт &lt;b&gt;cluster_id&lt;/b&gt; (по убыванию размера, 1 = крупнейший), &lt;b&gt;edge_count&lt;/b&gt; и &lt;b&gt;length&lt;/b&gt;. Помогает находить несвязанные кластеры и решать, какие сшивать или удалять.
+
+Линии объединяются там, где &lt;b&gt;совпадают их концы&lt;/b&gt;; если в данных есть пересечения в середине сегментов, сначала выполните &lt;i&gt;Топологическое разбиение&lt;/i&gt;.</translation>
     </message>
     <message>
-        <source>Done: {parts} parts from {inputs} lines, {ext} ends extended.</source>
-        <translation>Готово: {parts} частей из {inputs} линий, достроено концов — {ext}.</translation>
+        <source>Convex hull</source>
+        <translation>Выпуклая оболочка</translation>
+    </message>
+    <message>
+        <source>Bounding box</source>
+        <translation>Ограничивающий прямоугольник</translation>
+    </message>
+    <message>
+        <source>Oriented bounding box</source>
+        <translation>Ориентированный прямоугольник</translation>
+    </message>
+    <message>
+        <source>Input line layer</source>
+        <translation>Входной слой линий</translation>
+    </message>
+    <message>
+        <source>Cluster shape</source>
+        <translation>Форма кластера</translation>
+    </message>
+    <message>
+        <source>Cluster polygons</source>
+        <translation>Полигоны кластеров</translation>
+    </message>
+    <message>
+        <source>No usable line geometries in the input.</source>
+        <translation>Во входных данных нет пригодных линейных геометрий.</translation>
+    </message>
+    <message>
+        <source>Done: {n} cluster polygons.</source>
+        <translation>Готово: {n} полигонов кластеров.</translation>
     </message>
 </context>
 </TS>

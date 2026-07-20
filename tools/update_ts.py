@@ -20,6 +20,7 @@ SOURCES = [
     "dangle_resolver_algorithm.py",
     "pseudonode_collapse_algorithm.py",
     "connected_components_algorithm.py",
+    "cluster_hulls_algorithm.py",
 ]
 TS = "i18n/network_topology_ru.ts"
 

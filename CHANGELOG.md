@@ -23,6 +23,10 @@ All notable changes to this project are documented here. The format is based on
 - **Connected components** algorithm (`network_topology:connectedcomponents`): label
   each line with a `cluster_id` (and `cluster_size`) for its independent sub-network;
   ids ordered by size (1 = largest). Reveals disconnected clusters / gaps.
+- **Cluster extents** algorithm (`network_topology:clusterhulls`): one polygon per
+  connected sub-network — convex hull, bounding box, or oriented bounding box — with
+  `cluster_id`, `edge_count` and `length`. Shared `build_components` helper in
+  `topology_utils.py`.
 - Shared helpers extracted into `topology_utils.py`.
 - pytest suites for the new algorithms (green on QGIS 4.2).
 

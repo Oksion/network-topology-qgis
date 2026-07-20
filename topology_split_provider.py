@@ -6,6 +6,7 @@ import os
 from qgis.core import QgsProcessingProvider
 from qgis.PyQt.QtGui import QIcon
 
+from .cluster_hulls_algorithm import ClusterHullsAlgorithm
 from .connected_components_algorithm import ConnectedComponentsAlgorithm
 from .dangle_resolver_algorithm import DangleResolverAlgorithm
 from .pseudonode_collapse_algorithm import PseudoNodeCollapseAlgorithm
@@ -20,6 +21,7 @@ class TopologySplitProvider(QgsProcessingProvider):
         self.addAlgorithm(DangleResolverAlgorithm())
         self.addAlgorithm(PseudoNodeCollapseAlgorithm())
         self.addAlgorithm(ConnectedComponentsAlgorithm())
+        self.addAlgorithm(ClusterHullsAlgorithm())
 
     def id(self):
         """Stable, unique id used in algorithm ids (``network_topology:...``)."""

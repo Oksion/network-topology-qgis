@@ -73,8 +73,23 @@ qgis_process run "network_topology:connectedcomponents" \
 | `INPUT` | Line layer (node it first for correct connectivity) |
 | `OUTPUT` | Lines with `cluster_id` + `cluster_size` |
 
+### 5. Cluster extents — `network_topology:clusterhulls`
+One **polygon per connected sub-network**: convex hull, bounding box, or oriented
+bounding box. Each carries `cluster_id`, `edge_count` and `length`. Use it to see where
+disconnected clusters sit (a stray "island" far from the main network).
+
+```bash
+qgis_process run "network_topology:clusterhulls" \
+  --INPUT=roads_noded.gpkg --METHOD=0 --OUTPUT=clusters.gpkg
+```
+
+| Param | Meaning |
+|-------|---------|
+| `METHOD` | `0` convex hull · `1` bounding box · `2` oriented bounding box |
+| `OUTPUT` | One polygon per cluster (`cluster_id`, `edge_count`, `length`) |
+
 > Typical cleaning flow: **Resolve dangles** → **Topology split** → **Collapse pseudo-nodes**;
-> then **Connected components** to check the network is fully connected.
+> then **Connected components** / **Cluster extents** to inspect connectivity.
 
 ## Installation
 

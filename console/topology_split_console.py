@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # =============================================================================
 #  Network Topology · Topology split — standalone script for the QGIS Python Console
 # =============================================================================
@@ -167,8 +166,9 @@ def _extend_end(i, pts, at_start, geoms, index, tolerance, eps):
 
 
 # ---- core: build the noded memory layer ------------------------------------
-def run_topology_split(layer, tolerance=0.0, output_name="Noded lines",
-                       selected_only=False):
+def run_topology_split(
+    layer, tolerance=0.0, output_name="Noded lines", selected_only=False
+):
     """Run the self-noding on `layer` and return a new in-memory line layer."""
     if layer is None:
         raise ValueError("No input layer.")
@@ -193,8 +193,10 @@ def run_topology_split(layer, tolerance=0.0, output_name="Noded lines",
                 lines.append({"pts": list(polyline), "attrs": attrs})
 
     if not lines:
-        raise ValueError("Input has no usable line geometries "
-                         "(is it a line layer? is anything selected?).")
+        raise ValueError(
+            "Input has no usable line geometries "
+            "(is it a line layer? is anything selected?)."
+        )
 
     ext = layer.extent()
     diag = math.hypot(ext.width(), ext.height()) if not ext.isEmpty() else 1.0
@@ -263,8 +265,10 @@ def run_topology_split(layer, tolerance=0.0, output_name="Noded lines",
 
     dp.addFeatures(out_feats)
     out.updateExtents()
-    print("Topology split: %d parts from %d lines, %d ends extended."
-          % (len(out_feats), len(lines), extended))
+    print(
+        f"Topology split: {len(out_feats)} parts from {len(lines)} lines, "
+        f"{extended} ends extended."
+    )
     return out
 
 
@@ -274,20 +278,22 @@ def main():
         found = QgsProject.instance().mapLayersByName(src)
         src = found[0] if found else None
         if src is None:
-            print('Layer named "%s" not found.' % INPUT_LAYER)
+            print(f'Layer named "{INPUT_LAYER}" not found.')
             return
     if src is None and iface is not None:
         src = iface.activeLayer()
     if src is None:
-        print("No input layer. Select a line layer in the Layers panel, "
-              "or set INPUT_LAYER at the top of the script.")
+        print(
+            "No input layer. Select a line layer in the Layers panel, "
+            "or set INPUT_LAYER at the top of the script."
+        )
         return
 
     result = run_topology_split(src, TOLERANCE, OUTPUT_NAME, USE_SELECTED_ONLY)
     QgsProject.instance().addMapLayer(result)
     if iface is not None:
         iface.mapCanvas().refresh()
-    print('Done. Added layer "%s" to the project.' % OUTPUT_NAME)
+    print(f'Done. Added layer "{OUTPUT_NAME}" to the project.')
 
 
 # Runs automatically when the whole file is pasted into the QGIS console.

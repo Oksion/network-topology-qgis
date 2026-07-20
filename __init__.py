@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Network Topology — QGIS 4.0 Processing plugin.
 
 QGIS loads a plugin by importing this package and calling ``classFactory(iface)``.

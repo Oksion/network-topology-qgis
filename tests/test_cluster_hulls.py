@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Functional tests for the Cluster extents (hull/bbox) algorithm.
 
 Skipped automatically when PyQGIS is unavailable (see conftest.py).
@@ -56,14 +55,18 @@ SMALL = [
 def test_one_polygon_per_cluster_ordered_by_size(qgis_app):
     ctx, out = _run(_layer(BIG + SMALL), method=0)
     assert out.featureCount() == 2
-    rows = {f["cluster_id"]: (f["edge_count"], f["length"], f.geometry().area())
-            for f in out.getFeatures()}
+    rows = {
+        f["cluster_id"]: (f["edge_count"], f["length"], f.geometry().area())
+        for f in out.getFeatures()
+    }
     # All polygons
-    assert all(f.geometry().type() == QgsWkbTypes.GeometryType.PolygonGeometry
-               for f in out.getFeatures())
-    assert rows[1][0] == 3                       # 3 edges
-    assert abs(rows[1][1] - 30.0) < 1e-6         # total length
-    assert rows[1][2] > rows[2][2]               # cluster 1 is the larger area
+    assert all(
+        f.geometry().type() == QgsWkbTypes.GeometryType.PolygonGeometry
+        for f in out.getFeatures()
+    )
+    assert rows[1][0] == 3  # 3 edges
+    assert abs(rows[1][1] - 30.0) < 1e-6  # total length
+    assert rows[1][2] > rows[2][2]  # cluster 1 is the larger area
 
 
 def test_bounding_box_method(qgis_app):

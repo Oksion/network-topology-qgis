@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Functional tests for the Resolve dangles algorithm.
 
 Skipped automatically when PyQGIS is unavailable (see conftest.py).
@@ -20,9 +19,7 @@ from dangle_resolver_algorithm import DangleResolverAlgorithm  # noqa: E402
 
 
 def _layer(wkts):
-    layer = QgsVectorLayer(
-        "LineString?crs=EPSG:3857&field=id:integer", "lines", "memory"
-    )
+    layer = QgsVectorLayer("LineString?crs=EPSG:3857&field=id:integer", "lines", "memory")
     feats = []
     for i, w in enumerate(wkts):
         f = QgsFeature(layer.fields())

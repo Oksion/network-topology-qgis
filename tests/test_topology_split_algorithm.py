@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Functional tests for the Topology split (self-noding) algorithm.
 
 Skipped automatically when PyQGIS is unavailable (see conftest.py).
@@ -35,10 +34,15 @@ def _line_layer(wkt_geoms, name="lines"):
     return layer
 
 
+# Keep contexts alive: a GC'd QgsProcessingContext deletes its memory output layers.
+_CONTEXTS = []
+
+
 def _run(layer, tolerance=0.0):
     alg = TopologySplitAlgorithm()
     alg.initAlgorithm()
     context = QgsProcessingContext()
+    _CONTEXTS.append(context)
     feedback = QgsProcessingFeedback()
     results = alg.run(
         {"INPUT": layer, "TOLERANCE": tolerance, "OUTPUT": "memory:"},
@@ -74,8 +78,8 @@ def test_t_touch_splits_only_the_touched_line(qgis_app):
     out = _run(
         _line_layer(
             [
-                "LineString (0 0, 10 0)",   # A (touched)
-                "LineString (5 0, 5 5)",    # B ends on A at (5,0)
+                "LineString (0 0, 10 0)",  # A (touched)
+                "LineString (5 0, 5 5)",  # B ends on A at (5,0)
             ]
         )
     )
@@ -101,8 +105,8 @@ def test_dangle_extended_to_reach_other_line(qgis_app):
     # A points at B but stops 0.4 short. With tolerance 1.0 it extends to x=5 and
     # splits B; without tolerance nothing happens.
     lines = [
-        "LineString (0 5, 4.6 5)",   # A: dangling end at (4.6, 5), heading +x
-        "LineString (5 0, 5 10)",    # B: vertical wall at x=5
+        "LineString (0 5, 4.6 5)",  # A: dangling end at (4.6, 5), heading +x
+        "LineString (5 0, 5 10)",  # B: vertical wall at x=5
     ]
 
     out_no = _run(_line_layer(lines), tolerance=0.0)
@@ -123,9 +127,7 @@ def test_multipart_is_exploded(qgis_app):
     )
     f = QgsFeature(layer.fields())
     f.setAttributes([0, "line-0"])
-    f.setGeometry(
-        QgsGeometry.fromWkt("MultiLineString ((0 0, 1 0), (2 0, 3 0))")
-    )
+    f.setGeometry(QgsGeometry.fromWkt("MultiLineString ((0 0, 1 0), (2 0, 3 0))"))
     layer.dataProvider().addFeatures([f])
     layer.updateExtents()
 

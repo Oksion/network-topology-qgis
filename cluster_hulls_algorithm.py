@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The ``Cluster extents`` Processing algorithm.
 
 Produces **one polygon per connected sub-network** (cluster) of a line layer — a
@@ -14,7 +13,6 @@ split* first if the data has mid-segment crossings. A fully-collinear cluster (a
 single straight run) yields a zero-area hull; that's expected.
 """
 
-from qgis.PyQt.QtCore import QCoreApplication, QMetaType
 from qgis.core import (
     Qgis,
     QgsFeature,
@@ -29,6 +27,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
 )
+from qgis.PyQt.QtCore import QCoreApplication, QMetaType
 
 try:
     from .topology_utils import build_components, data_eps, explode, polyline_length
@@ -116,8 +115,12 @@ class ClusterHullsAlgorithm(QgsProcessingAlgorithm):
         out_fields.append(QgsField("length", QMetaType.Type.Double))
 
         sink, dest_id = self.parameterAsSink(
-            parameters, self.OUTPUT, context,
-            out_fields, Qgis.WkbType.Polygon, source.sourceCrs(),
+            parameters,
+            self.OUTPUT,
+            context,
+            out_fields,
+            Qgis.WkbType.Polygon,
+            source.sourceCrs(),
         )
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))

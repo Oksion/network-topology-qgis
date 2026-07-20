@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Shared pytest fixtures.
 
 These tests need a real PyQGIS environment. If `qgis` cannot be imported (e.g. a

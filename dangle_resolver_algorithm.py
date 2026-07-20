@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The ``Resolve dangles`` Processing algorithm.
 
 Cleans the dangling ends of a line network, keeping the same features (one output
@@ -18,7 +17,6 @@ Geometry is treated as planar 2D. The pass is single-pass: ends are matched agai
 the input network, not against other ends' fresh edits.
 """
 
-from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (
     Qgis,
     QgsFeature,
@@ -33,6 +31,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSource,
     QgsWkbTypes,
 )
+from qgis.PyQt.QtCore import QCoreApplication
 
 try:
     from .topology_utils import (
@@ -140,8 +139,12 @@ class DangleResolverAlgorithm(QgsProcessingAlgorithm):
         is_multi = QgsWkbTypes.isMultiType(source.wkbType())
         out_wkb = Qgis.WkbType.MultiLineString if is_multi else Qgis.WkbType.LineString
         sink, dest_id = self.parameterAsSink(
-            parameters, self.OUTPUT, context,
-            source.fields(), out_wkb, source.sourceCrs(),
+            parameters,
+            self.OUTPUT,
+            context,
+            source.fields(),
+            out_wkb,
+            source.sourceCrs(),
         )
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
@@ -149,7 +152,7 @@ class DangleResolverAlgorithm(QgsProcessingAlgorithm):
         eps = data_eps(source.sourceExtent())
 
         # Flatten every part of every feature; keep a back-reference to rebuild.
-        features = []          # {"attrs": [...], "parts": [pts, ...]}
+        features = []  # {"attrs": [...], "parts": [pts, ...]}
         flat_pts, flat_ref = [], []
         for feat in source.getFeatures():
             parts = explode(feat.geometry())
@@ -185,7 +188,8 @@ class DangleResolverAlgorithm(QgsProcessingAlgorithm):
                         d0 = min(cand)
                         trimmed_start = True
                 if is_dangle(pts[-1], i, geoms, index, eps):
-                    cand = [d for d in junction_ds if length - tolerance - eps <= d < length - eps]
+                    lo = length - tolerance - eps
+                    cand = [d for d in junction_ds if lo <= d < length - eps]
                     if cand:
                         d1 = max(cand)
                         trimmed_end = True

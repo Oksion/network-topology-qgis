@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Regenerate the translation source (.ts) from the algorithm modules.
 
 pylupdate6 needs QGIS's Qt6 environment, so run this through the QGIS python:
@@ -29,4 +28,4 @@ sys.argv = ["pylupdate6", *SOURCES, "-ts", TS]
 from PyQt6.lupdate.pylupdate import main  # noqa: E402
 
 main()
-print("Updated %s" % TS)
+print(f"Updated {TS}")

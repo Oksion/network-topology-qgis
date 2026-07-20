@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The ``Topology split`` Processing algorithm.
 
 Takes a **single line layer** and rebuilds its topology *against itself*:
@@ -16,7 +15,6 @@ Geometry is treated as planar 2D (Z/M dropped). Shared helpers live in
 ``topology_utils``.
 """
 
-from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (
     Qgis,
     QgsFeature,
@@ -29,6 +27,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
 )
+from qgis.PyQt.QtCore import QCoreApplication
 
 try:  # loaded as part of the plugin package
     from .topology_utils import (
@@ -152,9 +151,14 @@ class TopologySplitAlgorithm(QgsProcessingAlgorithm):
                 if feedback.isCanceled():
                     return {self.OUTPUT: dest_id}
                 for at_start in (True, False):
-                    new_pt = extend_end(i, line["pts"], at_start, geoms, index, tolerance, eps)
+                    new_pt = extend_end(
+                        i, line["pts"], at_start, geoms, index, tolerance, eps
+                    )
                     if new_pt is not None:
-                        line["pts"].insert(0, new_pt) if at_start else line["pts"].append(new_pt)
+                        if at_start:
+                            line["pts"].insert(0, new_pt)
+                        else:
+                            line["pts"].append(new_pt)
                         extended += 1
                 feedback.setProgress(int(i / len(lines) * 40))
             geoms = [QgsGeometry.fromPolylineXY(line["pts"]) for line in lines]
@@ -200,8 +204,8 @@ class TopologySplitAlgorithm(QgsProcessingAlgorithm):
             feedback.setProgress(80 + int(i / len(lines) * 20))
 
         feedback.pushInfo(
-            self.tr("Done: {parts} parts from {inputs} lines, {ext} ends extended.").format(
-                parts=n_out, inputs=len(lines), ext=extended
-            )
+            self.tr(
+                "Done: {parts} parts from {inputs} lines, {ext} ends extended."
+            ).format(parts=n_out, inputs=len(lines), ext=extended)
         )
         return {self.OUTPUT: dest_id}

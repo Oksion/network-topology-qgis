@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The ``Collapse pseudo-nodes`` Processing algorithm.
 
 The inverse of noding: merges chains of lines that connect only through
@@ -16,7 +15,6 @@ meet) into single lines that run from one real junction/dead-end to the next.
 Geometry is treated as planar 2D; original vertices are preserved.
 """
 
-from qgis.PyQt.QtCore import QCoreApplication
 from qgis.core import (
     Qgis,
     QgsFeature,
@@ -25,10 +23,11 @@ from qgis.core import (
     QgsProcessing,
     QgsProcessingAlgorithm,
     QgsProcessingException,
-    QgsProcessingParameterField,
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
+    QgsProcessingParameterField,
 )
+from qgis.PyQt.QtCore import QCoreApplication
 
 try:
     from .topology_utils import data_eps, dist, explode, polyline_length
@@ -103,8 +102,12 @@ class PseudoNodeCollapseAlgorithm(QgsProcessingAlgorithm):
         gfi = source.fields().indexOf(group_field) if group_field else -1
 
         sink, dest_id = self.parameterAsSink(
-            parameters, self.OUTPUT, context,
-            source.fields(), Qgis.WkbType.LineString, source.sourceCrs(),
+            parameters,
+            self.OUTPUT,
+            context,
+            source.fields(),
+            Qgis.WkbType.LineString,
+            source.sourceCrs(),
         )
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
@@ -113,13 +116,14 @@ class PseudoNodeCollapseAlgorithm(QgsProcessingAlgorithm):
         snap = max(eps, 1e-12)
 
         # Explode to single-part edges; keep attributes + a group value per edge.
-        edges = []   # {"pts": [...], "attrs": [...], "grp": value_or_None, "len": float}
+        edges = []  # {"pts": [...], "attrs": [...], "grp": value_or_None, "len": float}
         for feat in source.getFeatures():
             attrs = feat.attributes()
             grp = attrs[gfi] if gfi >= 0 else None
             for pts in explode(feat.geometry()):
-                edges.append({"pts": pts, "attrs": attrs, "grp": grp,
-                              "len": polyline_length(pts)})
+                edges.append(
+                    {"pts": pts, "attrs": attrs, "grp": grp, "len": polyline_length(pts)}
+                )
 
         if not edges:
             feedback.pushWarning(self.tr("No usable line geometries in the input."))
@@ -143,14 +147,14 @@ class PseudoNodeCollapseAlgorithm(QgsProcessingAlgorithm):
 
         used = [False] * len(edges)
 
-        def walk(start_key, edge0, end0):
-            """Build a chain of (edge_index, forward) starting at start_key."""
+        def walk(edge0, end0):
+            """Build a chain of (edge_index, forward) seeded at edge0's end0 endpoint."""
             chain = []
-            cur_ei, cur_end, cur_key = edge0, end0, start_key
+            cur_ei, cur_end = edge0, end0
             grp_val = edges[cur_ei]["grp"]
             while True:
                 used[cur_ei] = True
-                forward = (cur_end == 0)  # start is at cur_key → traverse start→end
+                forward = cur_end == 0  # start is at cur_key → traverse start→end
                 chain.append((cur_ei, forward))
                 next_key = ends[cur_ei] if forward else starts[cur_ei]
                 if degree(next_key) != 2:
@@ -164,7 +168,7 @@ class PseudoNodeCollapseAlgorithm(QgsProcessingAlgorithm):
                     break  # closed loop
                 if gfi >= 0 and edges[n_ei]["grp"] != grp_val:
                     break  # attribute barrier
-                cur_ei, cur_end, cur_key = n_ei, n_end, next_key
+                cur_ei, cur_end = n_ei, n_end
             return chain
 
         chains = []
@@ -174,11 +178,11 @@ class PseudoNodeCollapseAlgorithm(QgsProcessingAlgorithm):
                 continue
             for ei, end in incident:
                 if not used[ei]:
-                    chains.append(walk(k, ei, end))
+                    chains.append(walk(ei, end))
         # Remaining edges form pure loops (all nodes degree 2).
         for ei in range(len(edges)):
             if not used[ei]:
-                chains.append(walk(starts[ei], ei, 0))
+                chains.append(walk(ei, 0))
 
         # Emit one merged single-part line per chain.
         n_out = 0

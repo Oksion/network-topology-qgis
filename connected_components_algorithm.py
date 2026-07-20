@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The ``Connected components`` Processing algorithm.
 
 Labels every line with the id of the **independent sub-network** (connected
@@ -15,7 +14,6 @@ Output features are single-part ``LineString`` s. Run *Topology split* first if 
 data has mid-segment crossings, so that lines actually share endpoints at junctions.
 """
 
-from qgis.PyQt.QtCore import QCoreApplication, QMetaType
 from qgis.core import (
     Qgis,
     QgsFeature,
@@ -29,6 +27,7 @@ from qgis.core import (
     QgsProcessingParameterFeatureSink,
     QgsProcessingParameterFeatureSource,
 )
+from qgis.PyQt.QtCore import QCoreApplication, QMetaType
 
 try:
     from .topology_utils import data_eps, explode
@@ -80,7 +79,9 @@ class ConnectedComponentsAlgorithm(QgsProcessingAlgorithm):
             )
         )
         self.addParameter(
-            QgsProcessingParameterFeatureSink(self.OUTPUT, self.tr("Lines with cluster id"))
+            QgsProcessingParameterFeatureSink(
+                self.OUTPUT, self.tr("Lines with cluster id")
+            )
         )
 
     def processAlgorithm(self, parameters, context, feedback):
@@ -96,8 +97,12 @@ class ConnectedComponentsAlgorithm(QgsProcessingAlgorithm):
         out_fields.append(QgsField(csz_name, QMetaType.Type.Int))
 
         sink, dest_id = self.parameterAsSink(
-            parameters, self.OUTPUT, context,
-            out_fields, Qgis.WkbType.LineString, source.sourceCrs(),
+            parameters,
+            self.OUTPUT,
+            context,
+            out_fields,
+            Qgis.WkbType.LineString,
+            source.sourceCrs(),
         )
         if sink is None:
             raise QgsProcessingException(self.invalidSinkError(parameters, self.OUTPUT))
@@ -166,9 +171,9 @@ class ConnectedComponentsAlgorithm(QgsProcessingAlgorithm):
             feedback.setProgress(int(ei / total * 100))
 
         feedback.pushInfo(
-            self.tr("Done: {n} components from {edges} edges (largest = cluster 1).").format(
-                n=len(ordered), edges=total
-            )
+            self.tr(
+                "Done: {n} components from {edges} edges (largest = cluster 1)."
+            ).format(n=len(ordered), edges=total)
         )
         return {self.OUTPUT: dest_id}
 
@@ -177,6 +182,6 @@ class ConnectedComponentsAlgorithm(QgsProcessingAlgorithm):
         existing = {f.name().lower() for f in fields}
         name, k = base, 2
         while name.lower() in existing:
-            name = "%s_%d" % (base, k)
+            name = f"{base}_{k}"
             k += 1
         return name

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Shared geometry helpers for the Network Topology toolkit.
 
 Pure, module-level functions operating mostly on lists of ``QgsPointXY`` so they
@@ -88,8 +87,9 @@ def extract_points(geom):
 def is_dangle(end_pt, i, geoms, index, eps):
     """True if ``end_pt`` (an endpoint of line ``i``) touches no other line."""
     eg = QgsGeometry.fromPointXY(end_pt)
-    probe = QgsRectangle(end_pt.x() - eps, end_pt.y() - eps,
-                         end_pt.x() + eps, end_pt.y() + eps)
+    probe = QgsRectangle(
+        end_pt.x() - eps, end_pt.y() - eps, end_pt.x() + eps, end_pt.y() + eps
+    )
     for j in index.intersects(probe):
         if j != i and geoms[j].distance(eg) <= eps:
             return False

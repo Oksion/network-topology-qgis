@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Functional tests for the Collapse pseudo-nodes algorithm.
 
 Skipped automatically when PyQGIS is unavailable (see conftest.py).

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Processing provider that groups this plugin's algorithms."""
 
 import os

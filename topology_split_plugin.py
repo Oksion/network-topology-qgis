@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Plugin object: registers the Processing provider with QGIS.
 
 This plugin has no classic menu/toolbar GUI — it exposes its functionality through
@@ -34,7 +33,7 @@ class TopologySplitPlugin:
             locale = QSettings().value("locale/userLocale", "") or ""
             lang = locale[:2] or "en"
             qm = os.path.join(
-                os.path.dirname(__file__), "i18n", "network_topology_%s.qm" % lang
+                os.path.dirname(__file__), "i18n", f"network_topology_{lang}.qm"
             )
             if os.path.exists(qm):
                 translator = QTranslator()

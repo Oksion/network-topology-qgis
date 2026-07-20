@@ -1,0 +1,64 @@
+name: Build plugin
+
+# Builds the installable QGIS plugin zip.
+#  • on every push/PR touching plugin files → uploads the zip as a build artifact;
+#  • on a version tag (v*) → also publishes a GitHub Release with the zip attached.
+#
+# Tag a release with:  git tag v0.1.0 && git push origin v0.1.0
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to create a Release on tags
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read plugin version from metadata.txt
+        id: meta
+        run: |
+          version=$(grep -E '^version=' metadata.txt | cut -d= -f2- | tr -d '[:space:]')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Plugin version: $version"
+
+      - name: Stage plugin folder (exclude dev-only files)
+        run: |
+          set -euo pipefail
+          NAME=network_topology
+          mkdir -p "build/$NAME"
+          rsync -a \
+            --exclude='.git' --exclude='.github' --exclude='.claude' \
+            --exclude='scripts' --exclude='tests' --exclude='docs' --exclude='tools' \
+            --exclude='dist' --exclude='build' --exclude='__pycache__' \
+            --exclude='.pytest_cache' --exclude='.ruff_cache' --exclude='Test_roads' \
+            --exclude='.gitignore' --exclude='requirements-dev.txt' \
+            --exclude='pyproject.toml' --exclude='CLAUDE.md' \
+            ./ "build/$NAME/"
+
+      - name: Zip
+        id: zip
+        run: |
+          set -euo pipefail
+          ZIP="network_topology-${{ steps.meta.outputs.version }}.zip"
+          (cd build && zip -r "$ZIP" network_topology)
+          echo "zip=build/$ZIP" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: network_topology-${{ steps.meta.outputs.version }}
+          path: ${{ steps.zip.outputs.zip }}
+
+      - name: Publish Release (on tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" "${{ steps.zip.outputs.zip }}" --generate-notes

@@ -4,6 +4,8 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+
+## [0.2.0] - 2026-07-20
 ### Changed
 - **Renamed the plugin/provider to "Network Topology"** (provider id `network_topology`)
   to reflect its scope: cleaning and building the topology of line networks (roads,

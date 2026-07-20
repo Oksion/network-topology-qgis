@@ -32,3 +32,6 @@ venv/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Local test data (never publish)
+Test_roads/

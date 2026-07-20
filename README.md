@@ -1,5 +1,7 @@
 # Network Topology
 
+**English** · [Русский](README.ru.md)
+
 [![Build](https://github.com/Oksion/network-topology-qgis/actions/workflows/build-plugin.yml/badge.svg)](https://github.com/Oksion/network-topology-qgis/actions/workflows/build-plugin.yml)
 [![Release](https://img.shields.io/github/v/release/Oksion/network-topology-qgis?sort=semver)](https://github.com/Oksion/network-topology-qgis/releases)
 [![QGIS 4.0+](https://img.shields.io/badge/QGIS-4.0%2B-589632?logo=qgis&logoColor=white)](https://qgis.org)

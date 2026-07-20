@@ -5,6 +5,13 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-07-20
+### Changed
+- Marked the plugin **stable** (`experimental=False`) after validation on real QGIS 4.2
+  data — it now appears in the Plugin Manager without the "Show experimental" toggle.
+- Inlined the version history into `metadata.txt`'s `changelog` field so it renders on
+  the plugins.qgis.org listing page.
+
 ## [0.2.0] - 2026-07-20
 ### Changed
 - **Renamed the plugin/provider to "Network Topology"** (provider id `network_topology`)

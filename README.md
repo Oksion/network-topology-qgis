@@ -88,8 +88,23 @@ qgis_process run "network_topology:clusterhulls" \
 | `METHOD` | `0` convex hull · `1` bounding box · `2` oriented bounding box |
 | `OUTPUT` | One polygon per cluster (`cluster_id`, `edge_count`, `length`) |
 
+### 6. Network nodes — `network_topology:networknodes`
+One **point per node**, with its `degree` and a `node_type`: `dangle` (degree 1),
+`pseudo` (degree 2), `junction` (degree 3+). The QA companion — spot dead-ends,
+pseudo-nodes and real junctions.
+
+```bash
+qgis_process run "network_topology:networknodes" \
+  --INPUT=roads_noded.gpkg --OUTPUT=nodes.gpkg
+```
+
+| Param | Meaning |
+|-------|---------|
+| `INPUT` | Line layer (node it first so endpoints meet at junctions) |
+| `OUTPUT` | Points with `node_id`, `degree`, `node_type`, `edge_count` |
+
 > Typical cleaning flow: **Resolve dangles** → **Topology split** → **Collapse pseudo-nodes**;
-> then **Connected components** / **Cluster extents** to inspect connectivity.
+> then **Connected components** / **Cluster extents** / **Network nodes** to inspect topology.
 
 ## Installation
 

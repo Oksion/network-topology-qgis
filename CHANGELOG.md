@@ -27,6 +27,9 @@ All notable changes to this project are documented here. The format is based on
   connected sub-network — convex hull, bounding box, or oriented bounding box — with
   `cluster_id`, `edge_count` and `length`. Shared `build_components` helper in
   `topology_utils.py`.
+- **Network nodes** algorithm (`network_topology:networknodes`): one point per node
+  with `degree` and `node_type` (`dangle`/`pseudo`/`junction`, fixed English codes) —
+  the QA companion to the cleaning tools.
 - Shared helpers extracted into `topology_utils.py`.
 - pytest suites for the new algorithms (green on QGIS 4.2).
 

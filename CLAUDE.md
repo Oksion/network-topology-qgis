@@ -53,13 +53,14 @@ Topology_split/
 ├── __init__.py                     # classFactory(iface) — QGIS entry point
 ├── metadata.txt                    # plugin manifest (QGIS reads this)
 ├── topology_split_plugin.py        # registers the provider; installs the i18n translator
-├── topology_split_provider.py      # QgsProcessingProvider (registers all 5 algorithms)
+├── topology_split_provider.py      # QgsProcessingProvider (registers all 6 algorithms)
 ├── topology_utils.py               # shared pure helpers (dist, extract_points, build_components, …)
 ├── topology_split_algorithm.py     # QgsProcessingAlgorithm — self-noding
 ├── dangle_resolver_algorithm.py    # QgsProcessingAlgorithm — extend/trim dangles
 ├── pseudonode_collapse_algorithm.py# QgsProcessingAlgorithm — merge degree-2 chains
 ├── connected_components_algorithm.py # QgsProcessingAlgorithm — cluster_id per sub-network
 ├── cluster_hulls_algorithm.py      # QgsProcessingAlgorithm — hull/bbox polygon per cluster
+├── network_nodes_algorithm.py      # QgsProcessingAlgorithm — node points with degree/type
 ├── i18n/network_topology_ru.ts/.qm # Russian translation (source + compiled)
 ├── console/topology_split_console.py # copy-paste script for the QGIS Python Console
 ├── resources/icon.svg              # provider + plugin icon

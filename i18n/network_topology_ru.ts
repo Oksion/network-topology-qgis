@@ -256,4 +256,47 @@ Lines join where their &lt;b&gt;endpoints coincide&lt;/b&gt;; run &lt;i&gt;Topol
         <translation>Готово: {n} полигонов кластеров.</translation>
     </message>
 </context>
+<context>
+    <name>NetworkNodesAlgorithm</name>
+    <message>
+        <source>Network nodes (degree / type)</source>
+        <translation>Узлы сети (степень / тип)</translation>
+    </message>
+    <message>
+        <source>Topology</source>
+        <translation>Топология</translation>
+    </message>
+    <message>
+        <source>Emits one point per node of the line network, with its &lt;b&gt;degree&lt;/b&gt; (how many line ends meet there) and a &lt;b&gt;type&lt;/b&gt;:
+
+• &lt;b&gt;dangle&lt;/b&gt; — degree 1 (dead-end / free end);
+• &lt;b&gt;pseudo&lt;/b&gt; — degree 2 (two lines end-to-end);
+• &lt;b&gt;junction&lt;/b&gt; — degree 3+ (a real crossroad / confluence / branch).
+
+Nodes are the coinciding &lt;b&gt;endpoints of edges&lt;/b&gt; — run &lt;i&gt;Topology split&lt;/i&gt; first if the data has mid-segment crossings. The &lt;b&gt;node_type&lt;/b&gt; values are fixed English codes (dangle/pseudo/junction) for locale-stable filtering.</source>
+        <translation>Строит по одной точке на каждый узел линейной сети с его &lt;b&gt;степенью&lt;/b&gt; (сколько концов линий в нём сходится) и &lt;b&gt;типом&lt;/b&gt;:
+
+• &lt;b&gt;dangle&lt;/b&gt; — степень 1 (тупик / свободный конец);
+• &lt;b&gt;pseudo&lt;/b&gt; — степень 2 (две линии встык);
+• &lt;b&gt;junction&lt;/b&gt; — степень 3+ (настоящий перекрёсток / слияние / развилка).
+
+Узлы — это совпадающие &lt;b&gt;концы рёбер&lt;/b&gt;; если в данных есть пересечения в середине сегментов, сначала выполните &lt;i&gt;Топологическое разбиение&lt;/i&gt;. Значения &lt;b&gt;node_type&lt;/b&gt; — фиксированные английские коды (dangle/pseudo/junction) для не зависящей от языка фильтрации.</translation>
+    </message>
+    <message>
+        <source>Input line layer</source>
+        <translation>Входной слой линий</translation>
+    </message>
+    <message>
+        <source>Network nodes</source>
+        <translation>Узлы сети</translation>
+    </message>
+    <message>
+        <source>No usable line geometries in the input.</source>
+        <translation>Во входных данных нет пригодных линейных геометрий.</translation>
+    </message>
+    <message>
+        <source>Done: {n} nodes — {d} dangles, {p} pseudo, {j} junctions.</source>
+        <translation>Готово: {n} узлов — тупиков: {d}, псевдоузлов: {p}, перекрёстков: {j}.</translation>
+    </message>
+</context>
 </TS>

@@ -1,5 +1,12 @@
 # Network Topology
 
+[![Build](https://github.com/Oksion/network-topology-qgis/actions/workflows/build-plugin.yml/badge.svg)](https://github.com/Oksion/network-topology-qgis/actions/workflows/build-plugin.yml)
+[![Release](https://img.shields.io/github/v/release/Oksion/network-topology-qgis?sort=semver)](https://github.com/Oksion/network-topology-qgis/releases)
+[![QGIS 4.0+](https://img.shields.io/badge/QGIS-4.0%2B-589632?logo=qgis&logoColor=white)](https://qgis.org)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org)
+[![License: GPL v2+](https://img.shields.io/badge/License-GPLv2%2B-blue.svg)](LICENSE)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/3CLiAI1)
+
 A **QGIS 4.0** plugin — a toolkit to **clean and build the topology of line networks**
 (roads, rivers, pipelines, railways), preserving geometry and attributes.
 
@@ -109,7 +116,9 @@ qgis_process run "network_topology:networknodes" \
 ## Installation
 
 ### From a packaged zip
-1. Run `scripts/package.ps1` to build `topology_split-<version>.zip`.
+1. Download `network_topology-<version>.zip` from the
+   [latest release](https://github.com/Oksion/network-topology-qgis/releases/latest)
+   (or build it yourself with `scripts/package.ps1`).
 2. In QGIS: **Plugins → Manage and Install Plugins → Install from ZIP**.
 
 ### Without installing — from the QGIS Python Console
@@ -129,10 +138,20 @@ See [docs/development.md](docs/development.md) for the full dev setup.
 
 ## Status
 
-`0.1.0` — experimental. Geometry is treated as planar 2D (Z/M dropped). Long collinear
+`0.2.0` — experimental. Geometry is treated as planar 2D (Z/M dropped). Long collinear
 overlaps are noded only at their extremities; the dangle-extension pass is single-pass.
 Validate on your own data before relying on it in production.
 
 ## License
 
 GPL-2.0-or-later. See [LICENSE](LICENSE).
+
+## Acknowledgements
+
+Made with ❤️ and 🗺️ by [**Oksion**](https://github.com/Oksion), pair-programmed with
+**Claude** (Anthropic) — from the first `metadata.txt` to the topology maths, the Russian
+translation and this very CI.
+
+If it saved you an afternoon of fixing dangles by hand, you can say thanks:
+
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-%E2%98%95-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/3CLiAI1)

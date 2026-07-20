@@ -10,7 +10,7 @@ about=Adds a Processing provider with tools to clean and build the topology of a
     (4) Connected components — label independent sub-networks; (5) Cluster extents —
     hull/bbox polygon per cluster; (6) Network nodes — points with degree and type.
     Output is single-part, geometry and attributes preserved. Built for QGIS 4.0 (Qt6 / PyQt6).
-version=0.2.1
+version=0.2.2
 author=Oksion
 email=oksion@gmail.com
 
@@ -31,7 +31,9 @@ experimental=False
 deprecated=False
 
 ; QGIS 4.0 is Qt6-only; the pre-release `supportsQt6` flag was removed and must NOT be set.
-changelog=0.2.1
+changelog=0.2.2
+    - Code cleanup: linted and formatted the whole codebase (ruff); no behaviour changes.
+    0.2.1
     - Marked stable (no longer experimental) after validation on real QGIS 4.2 data.
     0.2.0
     - Renamed to "Network Topology"; provider id network_topology, algorithm ids network_topology:*.

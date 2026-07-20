@@ -5,6 +5,15 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-07-20
+### Changed
+- Code cleanup before the plugins.qgis.org submission: linted and formatted the whole
+  codebase with `ruff` (import order, f-strings outside `tr()`, line lengths, dead
+  variable in `pseudonode_collapse`). No behaviour changes; translations unaffected
+  (all 54 messages re-verified, `.qm` rebuilt).
+- Tests: keep the `QgsProcessingContext` alive in the topology-split suite so its
+  memory output layer is not garbage-collected mid-test (26/26 green on QGIS 4.2).
+
 ## [0.2.1] - 2026-07-20
 ### Changed
 - Marked the plugin **stable** (`experimental=False`) after validation on real QGIS 4.2
